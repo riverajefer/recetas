@@ -1,15 +1,18 @@
-
 <ion-header>
-
   <ion-navbar>
-    <button menuToggle>
+    <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>  
-    <ion-title>{{ carne.titulo  }}</ion-title>
+
+    <ion-title>{{ carne.titulo }}</ion-title>
+
+      <ion-buttons end>
+        <button ion-button color="royal" (click)="edit()">
+          <ion-icon name="md-create"></ion-icon>
+        </button>
+      </ion-buttons>    
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <h3>{{ carne.titulo  }}</h3>

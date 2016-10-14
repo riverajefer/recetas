@@ -9,7 +9,6 @@ import 'rxjs/Rx';
 export class CarneProvider {
 
   carnes: any = null;
-  
   URL:string = 'https://blooming-retreat-58545.herokuapp.com/carne';
 
   constructor(public http: Http) {
@@ -23,72 +22,22 @@ export class CarneProvider {
     return this.http.get(this.URL).map(this.extractData).catch(this.handleError);
   }
 
-  addCarne (carne:Object): Observable<Carne> {
-    return this.http.post(this.URL, carne)
-    .map(this.extractDataAdd)
-    .catch(this.handleError);
+  addCarne(carne:Object): Observable<Carne> {
+    return this.http.post(this.URL, carne).map(this.extractData).catch(this.handleError);
   }
 
-  private extractDataAdd(res: Response) {
-    let body = res.json();
-    return body || { };
+  findByID(id:number):Observable<Carne>{
+      return this.http.get(this.URL+'/'+id).map(this.extractData).catch(this.handleError);
+  }
+
+  updateCarne(id:number, carne:Object): Observable<Carne> {
+    return this.http.post(this.URL+'/'+id, carne).map(this.extractData).catch(this.handleError);
   }  
 
   private extractData(res: Response){
       let body = res.json();
-      this.carnes = body.data;
       return body.data || {};
   }
-
-  private extractDataD(res: Response){
-      let body = res.json();
-      console.log(body)
-      console.log(body.data)
-      return body.data || {};
-  }
-
-  loadDetalles(id:number):Observable<Carne>{
-      return this.http.get(this.URL+'/'+id).map(this.extractDataAdd).catch(this.handleError);
-  }
-
-  loadDetallesw(id:number){
-
-    return new Promise<Carne>(resolve =>{
-      
-      this.http.get(this.URL+'/'+id)
-      .map(res => <Carne>(res.json()))
-      .subscribe(carne=>{
-        resolve(carne);
-        },
-		    function(error) { console.log("Error happened" + error)},
-		    function() { 
-          console.log("the subscription is completed"); 
-        }
-      );
-    });
-  }
-
-
-
-  loadDetalles2(id:number){
-
-    return new Promise<Carne>(resolve =>{
-
-      this.http.get(this.URL+'/'+id)
-      .map(res => <Carne>(res.json()))
-      .subscribe(carne=>{
-        resolve(carne);
-        },
-		    function(error) { console.log("Error happened" + error)},
-		    function() { 
-          console.log("the subscription is completed"); 
-        }
-      );
-    });
-  }
-
-
-
 
   private handleError (error: any) {
     let errMsg = (error.message) ? error.message :
@@ -96,7 +45,6 @@ export class CarneProvider {
     console.error(errMsg); // log to console instead
     return Observable.throw(errMsg);
   }
-
 
 }
 

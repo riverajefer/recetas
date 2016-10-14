@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController  } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ModalController  } from 'ionic-angular';
 import { CarneProvider } from '../../providers/carne-provider';
-import {Carne} from '../../models/carne'
+import { Carne } from '../../models/carne'
+import { ModalEdit } from '../modal-edit/modal-edit';
 
 @Component({
   templateUrl: 'carne-detalles.html',
@@ -17,7 +18,9 @@ export class CarneDetallesPage {
     private navCtrl: NavController, 
     navParams: NavParams, 
     private carneProvider:CarneProvider, 
-    public loadingCtrl: LoadingController){
+    public loadingCtrl: LoadingController,
+    public modalCtrl: ModalController
+    ){
 
   	this.id = navParams.get('id');
     this.getDetalles()
@@ -28,16 +31,28 @@ export class CarneDetallesPage {
       let loading = this.loadingCtrl.create({
         content: 'Please wait...'
       });
-
       loading.present();
 
-      this.carneProvider.loadDetalles(this.id)
+      this.carneProvider.findByID(this.id)
       .subscribe(carne => {
         this.carne = carne;
-        console.log(this.carne) 
         loading.dismiss();
       },  
       error =>  this.errorMessage = <any>error );
   }
 
+  edit(){
+
+    let modal = this.modalCtrl.create(ModalEdit, {idCarne: this.id});
+    
+    modal.onDidDismiss(carne => {
+      if(carne!=null){
+          this.carne = carne;
+      }
+    });
+
+    modal.present();
+
+  }
 }
+
